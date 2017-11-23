@@ -2,18 +2,31 @@ var socket = io(); // method available to socket.io.js file, we're initiating th
 // Arrow function may not work in IE or Safari , it may work well in chrome, so avoid using that.
 socket.on('connect',function(){
 console.log("Connected to server");
-
-// socket.emit('createMessage',{
-	// to:"mike@gmal.com",
-	// text:"I'm very well, Thank You"
-// })
 });
 
 socket.on('newMessage',function(message){
-	console.log("New Message Received");
-	console.log(JSON.stringify(message));
+	var li = jQuery('<li></li>');
+	li.text(`${message.from}:${message.text}`);
+	jQuery('#messages').append(li);
 });
 
 socket.on('disconnect',function(){
 console.log("disconnected from server");
 });
+
+// socket.emit('createMessage',{
+	// from:"mike@gmal.com",
+	// text:"Hi! My Name is Shoeb"
+// },function(response){
+	// console.log(response)
+// });
+
+jQuery('#message-form').on('submit',function(e){
+	e.preventDefault();
+	socket.emit('createMessage',{
+	from:"User",
+	text:jQuery("[name=message]").val()
+},function(response){
+	console.log(response)
+});
+})

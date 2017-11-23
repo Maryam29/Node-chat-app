@@ -20,12 +20,12 @@ io.on('connection',function(socket){
 	
 	socket.broadcast.emit('newMessage',generateMessage("Admin","New User has joined"));// This broadcasts the message, emits only to other clients except the client just connected to the socket, socket specifies just connected user
 		
-	socket.on('createMessage',function(message){
+	socket.on('createMessage',(message,callback) => {
 	console.log("New Message sent by client",message);
 	
 	io.emit('newMessage',generateMessage(message.from,message.text)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
 	//Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
-
+	callback("Message Received by server");
 	});
 	// socket.emit('newMessage',{
 		// from : "maryam@example.com",
