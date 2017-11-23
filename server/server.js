@@ -4,6 +4,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 var app = express();
+const {generateMessage} = require('./utils/message.js');
 const path = require('path');
 const publicPath = path.join(__dirname,'../public');
 const port = process.env.PORT || 3000;
@@ -15,24 +16,15 @@ var io = socketIO(server); 		// we get back web socket server, this helps us com
 io.on('connection',function(socket){
 	console.log("New user connected"); // This is called whenevr browser is refreshed or new tab is opened for this index
 	
-	socket.emit('newMessage',{ // This emits the message, to the user who got connected!
-		text: "Welome to the chat room",
-		createdAt: new Date().getTime()
-	});
+	socket.emit('newMessage',generateMessage("Admin","Welome to the chat room"));// This emits the message, to the user who got connected!);
 	
-	socket.broadcast.emit('newMessage',{ // This broadcasts the message, emits only to other clients except the client just connected to the socket, socket specifies just connected user
-		text: "New User has joined",
-		createdAt: new Date().getTime()
-	});
-	
+	socket.broadcast.emit('newMessage',generateMessage("Admin","New User has joined"));// This broadcasts the message, emits only to other clients except the client just connected to the socket, socket specifies just connected user
+		
 	socket.on('createMessage',function(message){
 	console.log("New Message sent by client",message);
 	
-	socket.emit('newMessage',{ // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
-		from : message.from,
-		text: message.text,
-		createdAt: new Date().getTime()
-	});   //Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
+	io.emit('newMessage',generateMessage(message.from,message.text)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
+	//Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
 
 	});
 	// socket.emit('newMessage',{
@@ -43,11 +35,7 @@ io.on('connection',function(socket){
 
 	socket.on('disconnect',function(){    // This is called whenever browser is closed, socket is closed
 	console.log("User disconnected");
-	
-	socket.broadcast.emit('newMessage',{ // This broadcasts the message, emits only to other clients except the client just connected to the socket, socket specifies just connected user
-		text: "A User has left",
-		createdAt: new Date().getTime()
-	});
+	socket.broadcast.emit('newMessage',generateMessage("Admin","A User has left")); // This broadcasts the message, emits only to other clients except the client just connected to the socket, socket specifies just connected user	
 	});
 	
 	

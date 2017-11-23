@@ -1,11 +1,11 @@
 {
   "name": "chat-app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha server/**/*.test.js",
+    "text-watch": "nodemon --exec 'npm test'"
   },
   "engines": {
     "node": "8.6.0"
@@ -15,5 +15,18 @@
   "dependencies": {
     "express": "^4.14.0",
     "socket.io": "^1.4.8"
-  }
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maryam29/Node-chat-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Maryam29/Node-chat-app/issues"
+  },
+  "homepage": "https://github.com/Maryam29/Node-chat-app#readme",
+  "description": ""
 }
