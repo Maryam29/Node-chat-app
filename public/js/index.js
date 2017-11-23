@@ -3,15 +3,15 @@ var socket = io(); // method available to socket.io.js file, we're initiating th
 socket.on('connect',function(){
 console.log("Connected to server");
 
-socket.emit('createMessage',{
-	to:"mike@gmal.com",
-	text:"I'm very well, Thank You"
-})
+// socket.emit('createMessage',{
+	// to:"mike@gmal.com",
+	// text:"I'm very well, Thank You"
+// })
 });
 
-socket.on('newMessage',function(email){
+socket.on('newMessage',function(message){
 	console.log("New Message Received");
-	console.log(JSON.stringify(email));
+	console.log(JSON.stringify(message));
 });
 
 socket.on('disconnect',function(){

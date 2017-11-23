@@ -15,19 +15,27 @@ var io = socketIO(server); 		// we get back web socket server, this helps us com
 io.on('connection',function(socket){
 	console.log("New user connected"); // This is called whenevr browser is refreshed or new tab is opened for this index
 	
-	socket.emit('newMessage',{
-		from : "maryam@example.com",
-		text: "Het, Whats going on!",
-		createAt: 123
-	});   //Emit is used to send an event named 'newEmail' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
+	socket.on('createMessage',function(message){
+	console.log("New Message sent by client",message);
+	
+	io.emit('newMessage',{
+		"from" : message.from,
+		"text": message.text,
+		createdAt: 123
+	});   //Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
+
+	});
+	// socket.emit('newMessage',{
+		// from : "maryam@example.com",
+		// text: "Het, Whats going on!",
+		// createAt: 123
+	// });   //Emit is used to send an event named 'newEmail' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
 
 	socket.on('disconnect',function(){    // This is called whenever browser is closed, socket is closed
 	console.log("User disconnected");
 	});
 	
-	socket.on('createMessage',function(newemail){
-	console.log("New Message sent by client",newemail);
-	});
+	
 	})
 
 app.use(express.static(publicPath));  
