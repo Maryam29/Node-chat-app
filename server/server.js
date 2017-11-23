@@ -4,7 +4,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 var app = express();
-const {generateMessage} = require('./utils/message.js');
+const {generateMessage,generateLocationMessage} = require('./utils/message.js');
 const path = require('path');
 const publicPath = path.join(__dirname,'../public');
 const port = process.env.PORT || 3000;
@@ -27,12 +27,14 @@ io.on('connection',function(socket){
 	//Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
 	callback("Message Received by server");
 	});
-	// socket.emit('newMessage',{
-		// from : "maryam@example.com",
-		// text: "Het, Whats going on!",
-		// createAt: 123
-	// });   //Emit is used to send an event named 'newEmail' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
-
+	
+	socket.on('createLocationMessage',(coords,callback) => {
+	console.log("New Message sent by client",coords);
+	
+	io.emit('newLocationMessage',generateLocationMessage(coords.latitude,coords.longitude)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
+	callback("Message Received by server");
+	});
+	
 	socket.on('disconnect',function(){    // This is called whenever browser is closed, socket is closed
 	console.log("User disconnected");
 	socket.broadcast.emit('newMessage',generateMessage("Admin","A User has left")); // This broadcasts the message, emits only to other clients except the client just connected to the socket, socket specifies just connected user	
