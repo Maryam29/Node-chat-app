@@ -5,19 +5,22 @@ console.log("Connected to server");
 });
 
 socket.on('newMessage',function(message){
+	var formattedTime = moment(message.createdAt).format('h:mm a');
 	var li = jQuery('<li></li>');
-	li.text(`${message.from}:${message.text}`);
+	li.text(`${message.from} ${formattedTime}:${message.text}`);
 	jQuery('#messages').append(li);
+	//console.log(message);
 });
 
 socket.on('newLocationMessage',function(message){
+	var formattedTime = moment(message.createdAt).format('h:mm a');
 	var li = jQuery('<li></li>');
 	var a = jQuery(`<a target="_blank">My Current Location</a>`);
-	console.log(message.url);
 	a.attr('href', message.url);
-	li.text('User');
+	li.text(`${message.from} ${formattedTime}:`);
 	li.append(a);
 	jQuery('#messages').append(li);
+	//console.log(message);
 });
 
 socket.on('disconnect',function(){
@@ -54,7 +57,6 @@ locationButton.on('click', function(){
 			longitude: position.coords.longitude,
 			latitude: position.coords.latitude
 		},function(response){
-	console.log(response);
 	locationButton.removeAttr('disabled').text('Send location');
 });
 	},function(){

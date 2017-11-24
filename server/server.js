@@ -25,6 +25,7 @@ io.on('connection',function(socket){
 	
 	io.emit('newMessage',generateMessage(message.from,message.text)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
 	//Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
+	//console.log(generateMessage(message.from,message.text));
 	callback("Message Received by server");
 	});
 	
