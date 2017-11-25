@@ -6,9 +6,9 @@ var generateMessage = function(from,text){
 		createdAt: moment().valueOf()
 			};
 	};
-var generateLocationMessage = function(latitude,longitude){
+var generateLocationMessage = function(name,latitude,longitude){
 	return {
-		from:'User',
+		from:name,
 		url:`https://www.google.co.in/maps?q=${latitude},${longitude}`,
 		createdAt: moment().valueOf()
 		};
