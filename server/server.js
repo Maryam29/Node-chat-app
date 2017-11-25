@@ -41,20 +41,23 @@ io.on('connection',function(socket){
 	
 	//Got the message from users and forwarding it to all other users
 	socket.on('createMessage',(message,callback) => {
-	console.log("New Message sent by client",message);
 	var currentuser = users.getUser(socket.id);
-	
-	io.to(currentuser.room).emit('newMessage',generateMessage(currentuser.name,message.text)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
+	if(currentuser && isRealString(message.text)){
+		io.to(currentuser.room).emit('newMessage',generateMessage(currentuser.name,message.text)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
+		callback("Message Received and sent");
+	}
 	//Emit is used to send an event named 'newMessage' the same event name has to be used client side to listen to this event. Also this doesn't have any callback function as we're not listening to the event but we have to specify the data to be sent to the client
-	callback("Message Received by server");
+	
 	});
 	
 	//Got the Location message from users and forwarding it to all other users
 	socket.on('createLocationMessage',(coords,callback) => {
 	var currentuser = users.getUser(socket.id);
-	
-	io.to(currentuser.room).emit('newLocationMessage',generateLocationMessage(currentuser.name,coords.latitude,coords.longitude)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
-	callback("Message Received by server");
+	if(currentuser){
+		io.to(currentuser.room).emit('newLocationMessage',generateLocationMessage(currentuser.name,coords.latitude,coords.longitude)); // io.emit emits to all connected client while socket.emit emits  only to the socket who sent the message 
+		callback("Message Received and sent");
+	}
+	callback("error");
 	});
 	
 	socket.on('disconnect',function(){    // This is called whenever browser is closed, socket is closed
